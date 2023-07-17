@@ -14,10 +14,11 @@ class PDFController {
         $query = "SELECT 
         id_factura,nro_factura,fecha_factura,descuento_factura,tipo_factura,orden_compra,valor_moneda_factura, nombre_empresa,ruc_empresa,propietario_empresa,direccion_empresa,categoria_empresa, telefono_empresa,
         nombre_cliente,ruc_cliente,direccion_cliente,timbrado_factura,inicio_timbrado,fin_timbrado,nro_datos_factura,monto_total_factura,logo_url_empresa,obs_empresa_factura,fecha_empresa_factura
-        from facturas,clientes,empresa_facturas,empresas
-        WHERE 
+        from facturas,clientes,empresa_facturas,empresas,facturas_cajas
+        WHERE
+        activo = 1 and 
         id_empresa_empresa = id_empresa and
-        id_caja_factura = id_caja_empresa and
+        id_caja_factura = caja_id_factura and
         id_cliente_factura = id_cliente and
         id_factura = $id";
         
