@@ -16,7 +16,7 @@ class PDFController {
         nombre_cliente,ruc_cliente,direccion_cliente,timbrado_factura,inicio_timbrado,fin_timbrado,nro_datos_factura,monto_total_factura,logo_url_empresa,obs_empresa_factura,fecha_empresa_factura
         from facturas,clientes,empresa_facturas,empresas,facturas_cajas
         WHERE
-        activo = 1 and 
+        empresa_factura_id = id_empresa_factura and
         id_empresa_empresa = id_empresa and
         id_caja_factura = caja_id_factura and
         id_cliente_factura = id_cliente and
