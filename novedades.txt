@@ -234,12 +234,7 @@ CREATE TABLE IF NOT EXISTS `compras_items` (
 ) ;
 
 
-DROP TABLE IF EXISTS `colors`;
-CREATE TABLE IF NOT EXISTS `colors` (
-  `id_color` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `descripcion_color` varchar(200) NOT NULL,
-  `hexa_color` varchar(50) DEFAULT NULL
-);
+
 
 
 DROP TABLE IF EXISTS `depositos`;
@@ -351,9 +346,8 @@ INSERT INTO `empresas` (`id_empresa`, `nombre_empresa`, `propietario_empresa`, `
 
 DROP TABLE IF EXISTS `empresa_facturas`;
 CREATE TABLE IF NOT EXISTS `empresa_facturas` (
-  `id_empresa_factura` int(11) NOT NULL AUTO_INCREMENT,
+  `id_empresa_factura` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `id_empresa_empresa` int(11) NOT NULL COMMENT 'id_empresa de empresas',
-  `id_caja_empresa` int(11) NOT NULL COMMENT 'con id_caja',
   `timbrado_factura` varchar(100) NOT NULL,
   `inicio_timbrado` date NOT NULL,
   `fin_timbrado` date NOT NULL,
@@ -362,10 +356,10 @@ CREATE TABLE IF NOT EXISTS `empresa_facturas` (
   `nro_fin_factura` int(11) NOT NULL,
   `last_nro_factura` int(11) NOT NULL COMMENT 'ultimo nro sacado',
   `autoimpresor` tinyint(1) NOT NULL COMMENT '0=no 1=si',
+  `activo_factura` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 activo 0 des',
   `fecha_empresa_factura` date DEFAULT NULL COMMENT 'fecha de factura',
   `obs_empresa_factura` text NOT NULL COMMENT 'observaciones',
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_empresa_factura`)
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ;
 
 -- --------------------------------------------------------
@@ -398,6 +392,7 @@ INSERT INTO `empresa_recibos` (`id_empresa_recibo`, `last_nro_recibo`, `updated_
 DROP TABLE IF EXISTS `facturas`;
 CREATE TABLE IF NOT EXISTS `facturas` (
   `id_factura` int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
+  `empresa_factura_id` int DEFAULT NULL COMMENT 'empresa_facturas',
   `id_cliente_factura` int(11) NOT NULL,
   `id_user_factura` int(11) NOT NULL COMMENT 'id de user responsable',
   `id_caja_factura` int(11) NOT NULL,
@@ -423,33 +418,35 @@ CREATE TABLE IF NOT EXISTS `facturas` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `facturas_formas_pagos`
---
+DROP TABLE IF EXISTS `facturas_cajas`;
+CREATE TABLE IF NOT EXISTS `facturas_cajas` (
+  `id_facturas_caja` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `caja_id_factura` int NOT NULL COMMENT 'caja',
+  `factura_empresa_id` int NOT NULL COMMENT 'empresa_facturas',
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
+);
 
 DROP TABLE IF EXISTS `facturas_formas_pagos`;
 CREATE TABLE IF NOT EXISTS `facturas_formas_pagos` (
-  `id_facturas_formas_pago` int(11) NOT NULL AUTO_INCREMENT,
+  `id_facturas_formas_pago` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `descripcion_forma_pago` varchar(100) NOT NULL,
   `porcentaje_descuento_pago` float NOT NULL DEFAULT 0 COMMENT 'descuento',
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_facturas_formas_pago`)
+  `tipo_operacion` tinyint(1) DEFAULT '0' COMMENT '1 suma 0 descuenta',
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ;
 
 --
 -- Volcado de datos para la tabla `facturas_formas_pagos`
 --
 
-INSERT INTO `facturas_formas_pagos` (`id_facturas_formas_pago`, `descripcion_forma_pago`, `updated_at`) VALUES
-(1, 'Efectivo', '2022-07-02 22:45:33'),
-(2, 'Cheque', '2022-07-02 22:45:33'),
-(3, 'Tarjeta Crédito', '2022-07-02 22:45:33'),
-(4, 'Tarjeta Débito', '2022-07-02 22:45:33'),
-(5, 'Transferencia Bancaria', '2022-07-02 22:45:33'),
-(6, 'Giros', '2022-07-02 22:45:33'),
-(7, 'Otros', '2022-07-02 22:45:33');
+INSERT INTO `facturas_formas_pagos` (`id_facturas_formas_pago`, `descripcion_forma_pago`, `porcentaje_descuento_pago`, `tipo_operacion`, `updated_at`) VALUES
+(1, 'Efectivo', 0, 1, '2022-07-02 22:45:33'),
+(2, 'Cheque', 0, 1, '2022-07-02 22:45:33'),
+(3, 'Tarjeta Crédito', 0, 1, '2022-07-02 22:45:33'),
+(4, 'Tarjeta Débito', 0, 1, '2022-07-02 22:45:33'),
+(5, 'Transferencia Bancaria', 0, 1, '2022-07-02 22:45:33'),
+(6, 'Giros', 0, 1, '2022-07-02 22:45:33'),
+(7, 'Otros', 0, 1, '2022-07-02 22:45:33');
 
 -- --------------------------------------------------------
 
