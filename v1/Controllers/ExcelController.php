@@ -28,12 +28,10 @@ class ExcelController {
 
         $numeroDeFila = 2;
 
-        $consulta = "select estado_factura,nro_factura,fecha_factura,monto_total_factura,tipo_factura,nombre_cliente,ruc_cliente,iva_factura,nro_datos_factura,iva_10,iva_5,iva_exenta 
-        from facturas 
-        INNER JOIN clientes ON facturas.id_cliente_factura=clientes.id_cliente
-        INNER JOIN cajas ON cajas.id_caja=facturas.id_caja_factura
-        INNER JOIN empresa_facturas ON cajas.id_caja=empresa_facturas.id_caja_empresa
-        where tipo_factura = 1 or tipo_factura = 2 and fecha_factura between '$dateone' and '$datetwo'";
+        $consulta = "select estado_factura,nro_factura,fecha_factura,monto_total_factura,tipo_factura,nombre_cliente,ruc_cliente,iva_factura,iva_10,iva_5,iva_exenta, nro_datos_factura
+        from facturas, clientes, empresa_facturas 
+        where clientes.id_cliente = facturas.id_cliente_factura AND facturas.empresa_factura_id = empresa_facturas.id_empresa_factura and
+         tipo_factura> 0 and tipo_factura < 3  and fecha_factura between '$dateone' and '$datetwo'";
         $factura = Models::GET_INTERNO($consulta);
 
         
